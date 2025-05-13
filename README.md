@@ -5,7 +5,7 @@
 arXiv paper link: [![arXiv Paper](https://img.shields.io/badge/arXiv-2412.01496-orange.svg?style=flat)](https://arxiv.org/abs/2412.01496)
 
 <p align="center">
-  <img src='https://github.com/mazurowski-lab/medical-image-similarity-metrics/blob/main/figs/evalframework.png' width='95%'>
+  <img src='https://github.com/mazurowski-lab/medical-image-similarity-metrics/blob/master/figs/evalframework.png' width='95%'>
 </p>
 
 We provide an easy-to-use framework for evaluating distance/similarity metrics between unpaired sets of medical images with a variety of metrics, accompanying our [paper](https://arxiv.org/abs/2412.01496). For example, this can be used to evaluate the performance of image generative models in the medical imaging domain. The codebase includes implementations of several distance metrics that can be used to compare images, as well as tools for evaluating the performance of generative models on various downstream tasks.
