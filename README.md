@@ -40,15 +40,13 @@ Please cite our paper if you use this framework in your work:
 }
 ```
 
-## Installation/Setup
+## 0. Installation/Setup
 
 1. First, note that Python <=3.9 is required due to one of the distances, FRD, using PyRadiomics (see [here](https://github.com/AIM-Harvard/pyradiomics/issues/903)); for example, if using conda, this can be set up by running `conda install python=3.9`.
 2. Next, please run `pip3 install -r requirements.txt` to install the required packages.
 <!-- 3. Finally, install PyRadiomics by running `bash install.sh`. ???-->
 
-## Usage
-
-### Basic Metric Computation
+## 1. Basic Metric Computation
 
 You can compute all distance metrics between two sets of images using the following command:
 
@@ -58,9 +56,9 @@ bash compute_allmetrics.sh $IMAGE_FOLDER1 $IMAGE_FOLDER2
 
 where `$IMAGE_FOLDER1` and `$IMAGE_FOLDER2` are the paths to the two folders containing the images you want to compare. This will print out the computed distances to the terminal. For example, this can be used to evaluate the performance of a generative model by comparing the generated images to a set of real reference images.
 
-### Further Evaluations: Intrinsic
+## 2. Further Evaluations: Intrinsic
 
-#### Sample Efficiency and Computation Speed Analysis
+### 2.1 Sample Efficiency and Computation Speed Analysis
 
 As in our [paper](https://arxiv.org/abs/2412.01496) (Secs. 5.2 and 5.3), you can also evaluate how distance estimations and computation times change with the sample size of images used to compute the distance metrics. This can be done by running the `run_sample_efficiency.sh` script, with the same arguments as `compute_allmetrics.sh` (see [Basic Metric Computation](#basic-metric-computation)), except now, you'll need to specify the sample sizes you want to use, provided as a single string with spaces separating each size. For example, to compute the distances for sample sizes of 10, 100, 500 and 1000 images, you can run:
 
@@ -70,7 +68,7 @@ bash run_sample_efficiency.sh $IMAGE_FOLDER1 $IMAGE_FOLDER2 "10 100 500 1000"
 
 The distance values and computation times will be printed to the terminal.
 
-### Sensitivity to Image Transformations
+### 2.2 Sensitivity to Image Transformations
 
 To evaluate the sensitivity of the distance metrics to image transformations (as in Sec. 5.4 of our [paper](https://arxiv.org/abs/2412.01496)), you can use the `transform_images.py` script. This script applies a set of transformations to a folder of images `$IMAGE_FOLDER` and saves the transformed images in separate folders. The transformations include Gaussian blur and sharpness adjustment with different parameters (kernel sizes of 5 and 9, and sharpness factors of 0, 0.5 and 2, respectively), as well as RandomMotion from [TorchIO](https://github.com/TorchIO-project/torchio) with `degrees` and `translation` both ranging in [2,5,10]. The script can be run with the following command:
 
@@ -88,8 +86,9 @@ bash compute_allmetrics.sh $IMAGE_FOLDER $IMAGE_FOLDER_TRANSFORMED
 
 where `$IMAGE_FOLDER_TRANSFORMED` is the path to the folder containing the transformed images: `{$IMAGE_FOLDER}_gaussian_blur5` in this case.
 
-### Further Evaluations: Extrinsic
-#### Correlation with Downstream Task Performance
+## 3. Further Evaluations: Extrinsic
+
+### 3.1 Correlation with Downstream Task Performance
 
 As in Sec. 4.2 of our paper, you can evaluate the correlation between the distance metrics and the performance of a downstream task (e.g., classification, segmentation, etc.) using the `correlate_downstream_task.py` script. For example, as in our paper, this can be used to evaluate image-to-image translation models; given a test set $D_{s\rightarrow t}$ of source domain images which were translated to the target domain as well as an additional set of reference target domain images $D_t$, a distance/similarity metric $d$ (e.g., FRD) can be evaluated by seeing if $d(D_t, D_{s\rightarrow t})$ can serve as a proxy of (i.e, correlates with) the performance of some downstream task model on $D_{s\rightarrow t}$ (for example, Dice coefficient if the task is segmentation). **Note:** for this to be valid, the reference set $D_t$ must be fixed for all evaluations of $d$.
 
@@ -107,7 +106,7 @@ where `$CSV_FILE` is the path to the CSV file you created. The script will compu
 The correlation will be computed using the Pearson linear correlation coefficient, and the Spearman and Kendall nonlinear/rank correlation coefficients; the results will be printed to the terminal. The script will also plot a scatter plot of the distance metric values against the downstream task performance, and save the plot as a PNG file in the same directory as the input CSV file.
 The plot will be saved as `correlation_plot.png`, and the correlation coefficient will be printed to the terminal. The script will also print the p-value of the correlation tests, which indicates the statistical significance of the correlations.
 
-#### Out-of-Domain/Distribution Detection
+### 3.2 Out-of-Domain/Distribution Detection
 
 The script `ood_detection.py` allows you to evaluate the ability of different feature representations to detect out-of-distribution (OOD) images in both threshold-free and threshold-based settings, as shown in Section 4.1 of our paper. This is computed given:
 
