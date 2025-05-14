@@ -1,5 +1,6 @@
 # apply transformation to all images in a folder, and save them in another folder
 import torchvision.transforms as T
+import torchio.transforms as TIO
 from PIL import Image
 import os
 from tqdm import tqdm
@@ -7,7 +8,8 @@ from argparse import ArgumentParser
 
 transform_kwarg_counts = {
     'gaussian_blur': 2,
-    'adjust_sharpness': 3
+    'adjust_sharpness': 3,
+    'random_motion': 3,
 }
 
 def main(
@@ -16,6 +18,7 @@ def main(
     transform_names = [
         'gaussian_blur',
         'adjust_sharpness',
+        'random_motion',
     ]
     for transform_name in transform_names:
         print("Applying transform: ", transform_name)
@@ -30,6 +33,13 @@ def main(
                 kwargs = {
                         'sharpness_factor': [0, 0.5, 2][kwarg_idx]
                         }
+            elif transform_name == 'random_motion':
+                transform = TIO.RandomMotion
+                kwargs = {
+                    'degrees': [2, 5, 10][kwarg_idx],
+                    'translation': [2, 5, 10][kwarg_idx],
+                    'num_transforms': 1
+                }
             else: 
                 raise ValueError('Unknown transform_name')
 
