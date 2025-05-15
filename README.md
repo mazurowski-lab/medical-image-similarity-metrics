@@ -1,4 +1,4 @@
-# Medical Image 
+# Medical Image Similarity Metrics
 
 #### By [Nicholas Konz](https://nickk124.github.io/), [Richard Osuala](https://scholar.google.com/citations?user=0KkVRVQAAAAJ&hl=en), other authors...
 
