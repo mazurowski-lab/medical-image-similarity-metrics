@@ -65,7 +65,7 @@ class InceptionV3(nn.Module):
         if use_rad_imagenet:
             print("\n\n USING RADIMAGENET WEIGHTS to COMPUTE! \n\n")
             # convert their checkpoint to torchvision model
-            path = '/mnt/data1/breastHarmProj/domainshift_analysis/src/gan-metrics-pytorch/models/RadImageNet_InceptionV3.pt'
+            path = 'src/gan-metrics-pytorch/models/RadImageNet_InceptionV3.pt'
             base_model = models.inception_v3(pretrained=False, aux_logits=False)
             encoder_layers = list(base_model.children())
             # print children names
