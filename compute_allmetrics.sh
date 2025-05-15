@@ -33,10 +33,10 @@ echo "KID:"
     --fake "../../${IMAGE_FOLDER2}" \
     --img-size 256
 
-cd ../../cmmd-pytorch || exit
+cd ../cmmd-pytorch || exit
 
 echo "CMMD:"
-/usr/bin/time -f "Time for CMMD: %E sec" python3 main.py \
+/usr/bin/time -f "Time for CMMD: %E sec" python3 main_cmmd.py \
     "../../${IMAGE_FOLDER1}" \
     "../../${IMAGE_FOLDER2}" \
     --batch_size=32 \
