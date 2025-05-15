@@ -44,10 +44,9 @@ Please cite our paper if you use this framework in your work:
 
 ## 0. Installation/Setup
 
-1. First, note that Python <=3.9 is required due to one of the distances, FRD, using PyRadiomics (see [here](https://github.com/AIM-Harvard/pyradiomics/issues/903)); for example, if using conda, this can be set up by running `conda install python=3.9`.
+1. First, note that Python <=3.9 is required due to one of the distance metrics, FRD, using PyRadiomics (see [here](https://github.com/AIM-Harvard/pyradiomics/issues/903)); for example, if using conda, this can be set up by running `conda install python=3.9`.
 2. Next, please run `pip3 install -r requirements.txt` to install the required packages.
-3. Next, clone various necessary repositories (for example, PyRadiomics) by running `bash install.sh`.
-4. Finally, RadFID requires the RadImageNet weights for the InceptionV3 model, which can be downloaded from RadImageNet's official source [here](https://drive.google.com/file/d/1RHt2GnuOYlc_gcoTETtBDSW73mFyRAtR/view). Once downloaded, please place the `InceptionV3.pt` checkpoint file into `gan-metrics-pytorch/models` and rename it to `RadImageNet_InceptionV3.pt`. Our code will take care of the rest.
+3. Finally, RadFID requires the RadImageNet weights for the InceptionV3 model, which can be downloaded from RadImageNet's official source [here](https://drive.google.com/file/d/1RHt2GnuOYlc_gcoTETtBDSW73mFyRAtR/view). Once downloaded, please place the `InceptionV3.pt` checkpoint file into `src/gan-metrics-pytorch/models` and rename it to `RadImageNet_InceptionV3.pt`. Our code will take care of the rest.
 
 ## 1. Basic Metric Computation
 

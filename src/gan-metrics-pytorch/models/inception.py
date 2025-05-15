@@ -65,8 +65,9 @@ class InceptionV3(nn.Module):
         if use_rad_imagenet:
             print("\n\n USING RADIMAGENET WEIGHTS to COMPUTE! \n\n")
             # convert their checkpoint to torchvision model
-            path = 'src/gan-metrics-pytorch/models/RadImageNet_InceptionV3.pt'
-            base_model = models.inception_v3(pretrained=False, aux_logits=False)
+            print(os.getcwd())
+            path = 'models/RadImageNet_InceptionV3.pt'
+            base_model = models.inception_v3(aux_logits=False)
             encoder_layers = list(base_model.children())
             # print children names
             backbone = nn.Sequential(*encoder_layers[:-1])
@@ -86,7 +87,7 @@ class InceptionV3(nn.Module):
             base_model.load_state_dict(new_state_dict, strict=False)
             inception = base_model
         else:
-            inception = models.inception_v3(pretrained=True)
+            inception = models.inception_v3(weights=models.Inception_V3_Weights.DEFAULT)
 
 
         # Block 0: input to maxpool1

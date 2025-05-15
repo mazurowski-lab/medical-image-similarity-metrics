@@ -292,7 +292,7 @@ def calculate_fid_given_paths(paths, batch_size, cuda, dims, bootstrap=True, n_b
                 bar.set_postfix({'mean': fid_values[:i+1].mean()})
         results.append((paths[j+1], fid_values.mean(), fid_values.std()))
 
-    save_activations = True # for testing
+    save_activations = False # for testing
     if save_activations:
         act_fake = np.concatenate(act_fake)
         print(act_true.shape, act_fake.shape)
@@ -304,7 +304,6 @@ def calculate_fid_given_paths(paths, batch_size, cuda, dims, bootstrap=True, n_b
 
 
 if __name__ == '__main__':
-    tstart = time()
     parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
     parser.add_argument('--true', type=str, required=True,
                         help=('Path to the true images'))
@@ -324,17 +323,12 @@ if __name__ == '__main__':
                         help='Use RadImageNet features')
     parser.add_argument('--subset', type=int, default=None, help='Number of images to use')
     args = parser.parse_args()
-    print(args)
     os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
     paths = [args.true] + args.fake
 
     results = calculate_fid_given_paths(paths, args.batch_size, args.gpu != '', args.dims, model_type=args.model, use_rad_imagenet_features=args.use_rad_imagenet_features, subset=args.subset)
     for p, m, s in results:
         if args.use_rad_imagenet_features:
-            print('FID (RadImageNet): %.2f (%.3f)' % (m, s))
+            print('RadFID: %.2f (%.3f)' % (m, s))
         else:
-            print('FID (%s): %.2f (%.3f)' % (p, m, s))
-
-
-    tend = time()
-    print("compute time (sec) for N  = {} {}".format(tend - tstart, args.subset))
+            print('FID: %.2f (%.3f)' % (m, s))

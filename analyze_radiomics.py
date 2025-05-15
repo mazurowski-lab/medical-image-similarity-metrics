@@ -270,7 +270,7 @@ def main(
         image_folder1,
         image_folder2,
         interpret = False,
-        compute_auc_deviation = True,
+        compute_auc_deviation = False,
         run_tsne = False,
         feature_weights_path = None,
         subset = None,
@@ -366,9 +366,6 @@ def main(
         #print("Dataset 2: {}".format(np.sum(np.isnan(feats2) | np.isinf(feats2), axis=0)))
 
 
-        # compute radiomic distances
-        print("radiomic distance measures:")
-
         if compute_auc_deviation:
             # average auc deviation
             auc_devs = []
@@ -406,25 +403,20 @@ def main(
 
             return stat
 
-        # Compute the Wasserstein distance between the two datasets
-        # Create a SamplesLoss object with the 'sinkhorn' algorithm for efficient computation
-        loss = SamplesLoss("sinkhorn")
+        ## Compute the Wasserstein distance between the two datasets
+        ## Create a SamplesLoss object with the 'sinkhorn' algorithm for efficient computation
+        #loss = SamplesLoss("sinkhorn")
 
-        # convert np arrays to torch tensors
-        feats1 = torch.tensor(feats1).to(device)
-        feats2 = torch.tensor(feats2).to(device)
+        ## convert np arrays to torch tensors
+        #feats1 = torch.tensor(feats1).to(device)
+        #feats2 = torch.tensor(feats2).to(device)
 
-        try:
-            wasserstein_distance = loss(feats1, feats2)
-            print("Wasserstein distance:", wasserstein_distance.item())
-        except ValueError as e:
-            print(e)
+        #try:
+        #    wasserstein_distance = loss(feats1, feats2)
+        #    print("Wasserstein distance:", wasserstein_distance.item())
+        #except ValueError as e:
+        #    print(e)
 
-
-        feats1 = feats1.cpu().numpy()
-        feats2 = feats2.cpu().numpy()
-
-        print(feats1.shape, feats2.shape)
         # Frechet distance
         fd = frechet_distance(feats1, feats2)
 
@@ -463,10 +455,10 @@ def main(
 
         # MMD
         # convert np arrays to torch tensors
-        feats1 = torch.tensor(feats1).to(device)
-        feats2 = torch.tensor(feats2).to(device)
-        mmd = np.sqrt(MMDLoss()(feats1, feats2).item())
-        print("MMD: {}".format(mmd))
+        #feats1 = torch.tensor(feats1).to(device)
+        #feats2 = torch.tensor(feats2).to(device)
+        #mmd = np.sqrt(MMDLoss()(feats1, feats2).item())
+        #print("MMD: {}".format(mmd))
 
         # interpret and evaluate radiomic differences
         if interpret:
@@ -477,7 +469,7 @@ def main(
         ret = []
 
     if normalization == 'frd':
-        print("RaD results, {} normalization (no log):".format(normalization))
+        print("FRD results, {} normalization (no log):".format(normalization))
         for r in feature_exclusion_RaDs:
             print(r)
             if len(feature_exclusions) > 1:
@@ -485,7 +477,7 @@ def main(
             else:
                 ret = r
     else:
-        print("RaD results (with logarithm), {} normalization:".format(normalization))
+        print("FRD results (with logarithm), {} normalization:".format(normalization))
         for r in feature_exclusion_RaDs:
             print(np.log(r))
             if len(feature_exclusions) > 1:
@@ -497,7 +489,6 @@ def main(
 
 
 if __name__ == "__main__":
-    tstart = time()
     parser = ArgumentParser()
 
     parser.add_argument('--image_folder1', type=str, required=True)
@@ -530,6 +521,3 @@ if __name__ == "__main__":
         )
         # image_folder1 = 'data/dbc/prior_work_1k/mri_data_labeled2D/split_by_domain/test/Siemens',
         # image_folder2 = 'data/dbc/prior_work_1k/harmonized/by_unsb512/SiemenstoGE/fake_1',
-
-    tend = time()
-    print("compute time (sec) for N: {} {}".format(tend - tstart, args.subset))
