@@ -20,9 +20,11 @@ Included metrics:
 ## Credits
 
 Thanks to the following repositories which this framework builds upon:
+
 1. [frd-score](https://github.com/RichardObi/frd-score)
-2. [gan-metrics-pytorch](https://github.com/abdulfatir/gan-metrics-pytorch)
-3. [cmmd-pytorch](https://github.com/sayakpaul/cmmd-pytorch)
+2. [pyradiomics](https://github.com/AIM-Harvard/pyradiomics)
+3. [gan-metrics-pytorch](https://github.com/abdulfatir/gan-metrics-pytorch), which we modified to allow for RadFID.
+4. [cmmd-pytorch](https://github.com/sayakpaul/cmmd-pytorch)
 
 ## Citation
 
@@ -44,7 +46,8 @@ Please cite our paper if you use this framework in your work:
 
 1. First, note that Python <=3.9 is required due to one of the distances, FRD, using PyRadiomics (see [here](https://github.com/AIM-Harvard/pyradiomics/issues/903)); for example, if using conda, this can be set up by running `conda install python=3.9`.
 2. Next, please run `pip3 install -r requirements.txt` to install the required packages.
-<!-- 3. Finally, install PyRadiomics by running `bash install.sh`. ???-->
+3. Next, clone various necessary repositories (for example, PyRadiomics) by running `bash install.sh`.
+4. Finally, RadFID requires 
 
 ## 1. Basic Metric Computation
 
