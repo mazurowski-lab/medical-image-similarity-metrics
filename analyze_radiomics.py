@@ -17,7 +17,7 @@ from sklearn.decomposition import PCA
 from skdim import id
 from geomloss import SamplesLoss
 
-from src.radiomics.radiomics_utils import convert_radiomic_dfs_to_vectors, compute_and_save_imagefolder_radiomics, compute_and_save_imagefolder_radiomics_parallel, compute_normalized_RaD
+from src.radiomics.radiomics_utils import convert_radiomic_dfs_to_vectors, compute_and_save_imagefolder_radiomics, compute_and_save_imagefolder_radiomics_parallel, compute_normalized_FRD
 from src.utils import *
 
 viz_folder = "visualizations"
@@ -319,7 +319,7 @@ def main(
     radiomics_df2 = pd.read_csv(radiomics_path2)
 
     feature_exclusions = [None]
-    feature_exclusion_RaDs = []
+    feature_exclusion_FRDs = []
     if exclude_features:
         feature_exclusions = ["textural", "wavelet", "firstorder"]
         #feature_exclusions = [["wavelet-LL", "wavelet-LH", "wavelet-HL", "wavelet-HH"][3]]
@@ -345,25 +345,6 @@ def main(
             else:
                 feats1 = feats1 * feature_weights
                 feats2 = feats2 * feature_weights
-
-
-        #if subset is not None:
-        #    assert subset <= feats1.shape[0], "subset size must be less than or equal to number of images in dataset 1, but got {} > {}".format(subset, feats1.shape[0])
-        #    print("Using a random subset of {} images for analysis.".format(subset))
-        #    subset_indices = np.random.choice(feats1.shape[0], subset, replace=False)
-        #    feats1 = feats1[subset_indices]
-        #    feats2 = feats2[subset_indices]
-
-
-        # print number of rows which have any NaN or Inf values
-        # print("Number of rows with NaN or Inf values in radiomics:")
-        # print("Dataset 1: {}".format(np.sum(np.isnan(feats1) | np.isinf(feats1))))
-        # print("Dataset 2: {}".format(np.sum(np.isnan(feats2) | np.isinf(feats2))))
-
-        # # number of columns with any NaN or Inf values
-        # print("Number of columns with NaN or Inf values in radiomics:")
-        #print("Dataset 1: {}".format(np.sum(np.isnan(feats1) | np.isinf(feats1), axis=0)))
-        #print("Dataset 2: {}".format(np.sum(np.isnan(feats2) | np.isinf(feats2), axis=0)))
 
 
         if compute_auc_deviation:
@@ -403,28 +384,14 @@ def main(
 
             return stat
 
-        ## Compute the Wasserstein distance between the two datasets
-        ## Create a SamplesLoss object with the 'sinkhorn' algorithm for efficient computation
-        #loss = SamplesLoss("sinkhorn")
-
-        ## convert np arrays to torch tensors
-        #feats1 = torch.tensor(feats1).to(device)
-        #feats2 = torch.tensor(feats2).to(device)
-
-        #try:
-        #    wasserstein_distance = loss(feats1, feats2)
-        #    print("Wasserstein distance:", wasserstein_distance.item())
-        #except ValueError as e:
-        #    print(e)
-
         # Frechet distance
         fd = frechet_distance(feats1, feats2)
 
-        feature_exclusion_RaDs.append(fd)
+        feature_exclusion_FRDs.append(fd)
 
         compute_relative_rad = False
         if compute_relative_rad:
-            # compute relative RaD:
+            # compute relative FRD:
             # randomly split feats1 into two halves, compute the Frechet distance between the two halves
             # and divide the original Frechet distance by this value
             # do same, but normalizing factor is averaged over taking different halfs of the dataset
@@ -438,19 +405,19 @@ def main(
                 fd_halfs1.append(fd_half1)
 
             print("{} +/- {}".format(np.mean(np.log(fd_halfs1)), np.std(np.log(fd_halfs1))))
-            relative_RaD = np.log(fd) / np.mean(np.log(fd_halfs1))
-            print("Relative RaD with log (averaged over {} splits): {}".format(num_splits, relative_RaD)) 
+            relative_FRD = np.log(fd) / np.mean(np.log(fd_halfs1))
+            print("Relative FRD with log (averaged over {} splits): {}".format(num_splits, relative_FRD)) 
 
         compute_rad_tests = False
         if compute_rad_tests:
             fd_meanonly = frechet_distance(feats1, feats2, means_only=True)
             rad_meanonly = np.log(fd_meanonly)
-            print("RaD (mean terms only, log included): {}".format(rad_meanonly))
+            print("FRD (mean terms only, log included): {}".format(rad_meanonly))
 
-        compute_nRaD = False
-        if compute_nRaD:
-            nRaD = compute_normalized_RaD(feats1, feats2)
-            print("Normalized RaD: {}".format(nRaD))
+        compute_nFRD = False
+        if compute_nFRD:
+            nFRD = compute_normalized_FRD(feats1, feats2)
+            print("Normalized FRD: {}".format(nFRD))
 
 
         # MMD
@@ -470,7 +437,7 @@ def main(
 
     if normalization == 'frd':
         print("FRD results, {} normalization (no log):".format(normalization))
-        for r in feature_exclusion_RaDs:
+        for r in feature_exclusion_FRDs:
             print(r)
             if len(feature_exclusions) > 1:
                 ret.append(r)
@@ -478,7 +445,7 @@ def main(
                 ret = r
     else:
         print("FRD results (with logarithm), {} normalization:".format(normalization))
-        for r in feature_exclusion_RaDs:
+        for r in feature_exclusion_FRDs:
             print(np.log(r))
             if len(feature_exclusions) > 1:
                 ret.append(np.log(r))
@@ -519,5 +486,3 @@ if __name__ == "__main__":
         normalization=args.normalization,
         device=device
         )
-        # image_folder1 = 'data/dbc/prior_work_1k/mri_data_labeled2D/split_by_domain/test/Siemens',
-        # image_folder2 = 'data/dbc/prior_work_1k/harmonized/by_unsb512/SiemenstoGE/fake_1',

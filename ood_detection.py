@@ -311,12 +311,12 @@ if __name__ == '__main__':
     parser = ArgumentParser()
     parser.add_argument('--img_folder_ref_id', type=str, required=True, help='Path to the reference in-distribution image folder')
     parser.add_argument('--img_folder_test_id', type=str, required=True, help='Path to the folder of in-distribution test set images')
-    parser.add_argument('--out_img_folder_ood', type=str, required=True, help='Path to the out-of-distribution test set images')
+    parser.add_argument('--img_folder_test_ood', type=str, required=True, help='Path to the out-of-distribution test set images')
 
     args = parser.parse_args()
     in_img_folder = args.img_folder_ref_id
     out_img_folder_id = args.img_folder_test_id
-    out_img_folder_ood = args.out_img_folder_ood
+    out_img_folder_ood = args.img_folder_test_ood
 
     main(
         in_img_folder,

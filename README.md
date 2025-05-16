@@ -50,13 +50,19 @@ Please cite our paper if you use this framework in your work:
 
 ## 1. Basic Metric Computation
 
-You can compute all distance metrics between two sets of images using the following command:
+You can compute various distance metrics between two sets of images using the following command:
 
 ```bash
-bash compute_allmetrics.sh $IMAGE_FOLDER1 $IMAGE_FOLDER2
+bash compute_allmetrics.sh $IMAGE_FOLDER1 $IMAGE_FOLDER2 $METRICS
 ```
 
-where `$IMAGE_FOLDER1` and `$IMAGE_FOLDER2` are the paths to the two folders containing the images you want to compare. This will print out the computed distances to the terminal. For example, this can be used to evaluate the performance of a generative model by comparing the generated images to a set of real reference images.
+where `$IMAGE_FOLDER1` and `$IMAGE_FOLDER2` are the paths to the two folders containing the images you want to compare, and `$METRICS` is the list of metrics you want to compute out of FRD, FID, RadFID, KID and CMMD, as a single comma-separated string. E.g., to compute only FRD and CMMD, you would run:
+
+```bash
+bash compute_allmetrics.sh $IMAGE_FOLDER1 $IMAGE_FOLDER2 FRD,CMMD
+```
+
+This will print out the computed distances to the terminal. For example, this can be used to evaluate the performance of a generative model by comparing the generated images to a set of real reference images.
 
 ## 2. Further Evaluations: Intrinsic
 
@@ -72,7 +78,7 @@ The distance values and computation times will be printed to the terminal.
 
 ### 2.2 Sensitivity to Image Transformations
 
-To evaluate the sensitivity of the distance metrics to image transformations (as in Sec. 5.4 of our [paper](https://arxiv.org/abs/2412.01496)), you can use the `transform_images.py` script. This script applies a set of transformations to a folder of images `$IMAGE_FOLDER` and saves the transformed images in separate folders. The transformations include Gaussian blur and sharpness adjustment with different parameters (kernel sizes of 5 and 9, and sharpness factors of 0, 0.5 and 2, respectively), as well as RandomMotion from [TorchIO](https://github.com/TorchIO-project/torchio) with `degrees` and `translation` both ranging in [2,5,10]. The script can be run with the following command:
+To evaluate the sensitivity of the distance metrics to image transformations (as in Sec. 5.4 of our [paper](https://arxiv.org/abs/2412.01496)), you can use the `transform_images.py` script. This script applies a set of transformations to a folder of images `$IMAGE_FOLDER` and saves the transformed images in separate folders. The transformations include Gaussian blur and sharpness adjustment with different parameters (kernel sizes of 5 and 9, and sharpness factors of 0, 0.5 and 2, respectively). The script can be run with the following command:
 
 ```bash
 python3 transform_images.py $IMAGE_FOLDER

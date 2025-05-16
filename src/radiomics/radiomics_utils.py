@@ -29,7 +29,7 @@ logger = logging.getLogger('radiomics.imageoperations')
 logger.setLevel(logging.ERROR)
 
 
-def compute_slice_radiomics(img_slice, mask_slice, params_file='/mnt/data1/breastHarmProj/domainshift_analysis/src/radiomics/configs/2D_extraction.yaml'):
+def compute_slice_radiomics(img_slice, mask_slice, params_file='src/radiomics/configs/2D_extraction.yaml'):
     device = 'cpu' # GPU implementation is too slow, possibly bugged
     # device = 'cuda'
 
@@ -170,7 +170,6 @@ def convert_radiomic_dfs_to_vectors(radiomics_df1,
             feats2 = feats2[mask]
             imgfnames2 = imgfnames2[mask]
 
-    print(feats1.shape, feats2.shape)
     # normalize features in these arrays wrt first feature dist
     if normalization == 'zscore_bysourcedomain':
         mean = np.mean(feats1, axis=0)
@@ -344,7 +343,7 @@ def compute_and_save_imagefolder_radiomics_parallel(
 
 # dataloader for radiomic features
 
-def compute_normalized_RaD(feats1, feats2, val_frac=0.1):
+def compute_normalized_FRD(feats1, feats2, val_frac=0.1):
 
     # randomly split feats1 into train (reference set) and val (Establish distance dist), via val_frac
     val_idx = np.random.choice(feats1.shape[0], int(val_frac*feats1.shape[0]), replace=False)

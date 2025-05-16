@@ -12,3 +12,6 @@ scikit-dimension
 geomloss
 pyradiomics
 multiprocess
+absl-py
+transformers
+torchio
